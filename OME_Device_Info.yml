@@ -1,0 +1,125 @@
+---
+- hosts: OMEnt
+  connection: local
+  name: Dell OpenManage Ansible device inventory details.
+  gather_facts: False
+  vars:
+    USER: aap
+    PASSWD: 'Dell2022!'
+
+  collections:
+    - dellemc.openmanage
+
+  tasks:
+    - name: Retrieve basic inventory of all devices.
+      ome_device_info:
+        hostname:  "{{ inventory_hostname }}"
+        username: "{{ USER }}"
+        password:  "{{ PASSWD }}"
+        validate_certs: false
+        #ca_path: "/path/to/ca_cert.pem"
+      register: result
+
+#   - name: Get a list of all server Device IDs
+#     set_fact:
+#        devices: "{{ result.device_info.value | map(attribute='Id')|list }}"
+#        devices: "{{ result.device_info.value | map(attribute='DeviceServiceTag') }}"
+
+    - debug:
+#        var: devices
+#       var: result.device_info.value | map(attribute='DeviceServiceTag')
+        msg:
+          - "{{ result.device_info.value | map(attribute='Id') }}"
+          - "{{ result.device_info.value | map(attribute='DeviceServiceTag') }}"
+
+    - name: Retrieve basic inventory for devices identified by IDs 10094 (5JQZ2L3) or 10096 (GZYW2L3) using filtering.
+      ome_device_info:
+        hostname: "{{ inventory_hostname }}"
+        username: "{{ USER }}"
+        password: "{{ PASSWD }}"
+        validate_certs: false
+        fact_subset: "basic_inventory"
+        system_query_options:
+#          device_service_tag:
+#           - 5JQZ2L3
+#           - GZYW2L3
+           filter: "Id eq 10094 or Id eq 10096"
+#     register: result
+
+#   - debug:
+#       var: result
+
+    - name: Retrieve inventory details of specified devices identified by IDs 10094 (5JQZ2L3) and 10096 (GZYW2L3).
+      ome_device_info:
+        hostname:  "{{ inventory_hostname }}"
+        username: "{{ USER }}"
+        password: "{{ PASSWD }}"
+        validate_certs: false
+        fact_subset: "detailed_inventory"
+        system_query_options:
+          device_id:
+            - 10094
+            - 10096
+#     register: result
+
+#   - debug:
+#       var: result
+
+    - name: Retrieve inventory details of specified devices identified by service tags 5JQZ2L3 and GZYW2L3.
+      ome_device_info:
+        hostname: "{{ inventory_hostname }}"
+        username: "{{ USER }}"
+        password: "{{ PASSWD }}"
+        validate_certs: false
+        fact_subset: "detailed_inventory"
+        system_query_options:
+          device_service_tag:
+            - 5JQZ2L3
+            - GZYW2L3
+#     register: result
+
+#   - debug:
+#       var: result
+
+    - name: Retrieve details of specified inventory type of specified devices identified by ID and service tags.
+      ome_device_info:
+        hostname: "{{ inventory_hostname }}"
+        username: "{{ USER }}"
+        password: "{{ PASSWD }}"
+        validate_certs: false
+        fact_subset: "detailed_inventory"
+        system_query_options:
+          device_id:
+            - 10094
+          device_service_tag:
+            - GZYW2L3
+          inventory_type: "serverDeviceCards"
+#         inventory_type: "serverProcessors"
+#         inventory_type: "serverNetworkInterfaces"
+#         inventory_type: "serverFcCards"
+#         inventory_type: "serverOperatingSystems"
+#         inventory_type: "serverArrayDisks"
+#         inventory_type: "serverMemoryDevices"
+#         inventory_type: "serverPowerSupplies"
+#         inventory_type: "deviceFru"
+#         inventory_type: "deviceManagement"
+#     register: result
+
+#   - debug:
+#       var: result
+
+    - name: Retrieve subsystem health of specified devices identified by service tags.
+      ome_device_info:
+        hostname: "{{ inventory_hostname }}"
+        username: "{{ USER }}"
+        password: "{{ PASSWD }}"
+        validate_certs: false
+        fact_subset: "subsystem_health"
+        system_query_options:
+          device_service_tag:
+            - 5JQZ2L3
+            - GZYW2L3
+#     register: result
+
+#   - debug:
+#       var: result
