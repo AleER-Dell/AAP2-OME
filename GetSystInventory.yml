@@ -1,5 +1,5 @@
 ---
-- hosts: idrac
+- hosts: iDRACs
   connection: local
   name: Get system inventory
   gather_facts: True
