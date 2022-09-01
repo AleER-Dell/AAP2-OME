@@ -1,0 +1,23 @@
+---
+- hosts: iDRACs
+  connection: local
+  name: Reset iDRACs Cards in the Group Inventory
+  gather_facts: False
+  #vars:
+  #  idrac_user: root
+  #  idrac_password: calvin
+
+  collections:
+    - dellemc.openmanage
+
+  tasks:
+  - name: Reset iDRACs
+    idrac_reset:
+       idrac_ip:  "{{ inventory_hostname }}"
+       idrac_user:   "{{ idrac_user }}"
+       idrac_password:  "{{ idrac_password }}"
+       validate_certs: false
+    register: result_reset_idrac
+
+  - debug:
+       var: result_reset_idrac
