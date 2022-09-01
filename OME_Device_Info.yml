@@ -3,9 +3,9 @@
   connection: local
   name: Dell OpenManage Ansible device inventory details.
   gather_facts: False
-  vars:
-    USER: aap
-    PASSWD: 'Dell2022!'
+#  vars:
+#    OME_User: aap
+#    OME_Password: 'Dell2022!'
 
   collections:
     - dellemc.openmanage
@@ -14,8 +14,8 @@
     - name: Retrieve basic inventory of all devices.
       ome_device_info:
         hostname:  "{{ inventory_hostname }}"
-        username: "{{ USER }}"
-        password:  "{{ PASSWD }}"
+        username: "{{ OME_User }}"
+        password:  "{{ OME_Password }}"
         validate_certs: false
         #ca_path: "/path/to/ca_cert.pem"
       register: result
@@ -35,8 +35,8 @@
     - name: Retrieve basic inventory for devices identified by IDs 10094 (5JQZ2L3) or 10096 (GZYW2L3) using filtering.
       ome_device_info:
         hostname: "{{ inventory_hostname }}"
-        username: "{{ USER }}"
-        password: "{{ PASSWD }}"
+        username: "{{ OME_User }}"
+        password: "{{ OME_Password }}"
         validate_certs: false
         fact_subset: "basic_inventory"
         system_query_options:
@@ -52,8 +52,8 @@
     - name: Retrieve inventory details of specified devices identified by IDs 10094 (5JQZ2L3) and 10096 (GZYW2L3).
       ome_device_info:
         hostname:  "{{ inventory_hostname }}"
-        username: "{{ USER }}"
-        password: "{{ PASSWD }}"
+        username: "{{ OME_User }}"
+        password: "{{ OME_Password }}"
         validate_certs: false
         fact_subset: "detailed_inventory"
         system_query_options:
@@ -68,8 +68,8 @@
     - name: Retrieve inventory details of specified devices identified by service tags 5JQZ2L3 and GZYW2L3.
       ome_device_info:
         hostname: "{{ inventory_hostname }}"
-        username: "{{ USER }}"
-        password: "{{ PASSWD }}"
+        username: "{{ OME_User }}"
+        password: "{{ OME_Password }}"
         validate_certs: false
         fact_subset: "detailed_inventory"
         system_query_options:
@@ -84,8 +84,8 @@
     - name: Retrieve details of specified inventory type of specified devices identified by ID and service tags.
       ome_device_info:
         hostname: "{{ inventory_hostname }}"
-        username: "{{ USER }}"
-        password: "{{ PASSWD }}"
+        username: "{{ OME_User }}"
+        password: "{{ OME_Password }}"
         validate_certs: false
         fact_subset: "detailed_inventory"
         system_query_options:
@@ -111,8 +111,8 @@
     - name: Retrieve subsystem health of specified devices identified by service tags.
       ome_device_info:
         hostname: "{{ inventory_hostname }}"
-        username: "{{ USER }}"
-        password: "{{ PASSWD }}"
+        username: "{{ OME_User }}"
+        password: "{{ OME_Password }}"
         validate_certs: false
         fact_subset: "subsystem_health"
         system_query_options:
