@@ -1,0 +1,47 @@
+---
+- hosts: iDRACs
+  connection: local
+  name: Reset iDRAC
+  gather_facts: False
+
+  collections:
+    - dellemc.openmanage
+
+  tasks:
+  - name: Reset iDRAC
+    idrac_reset:
+       idrac_ip:  "{{ inventory_hostname }}"
+       idrac_user:   "{{ idrac_user }}"
+       idrac_password:  "{{ idrac_password }}"
+       validate_certs: false
+    register: result
+    failed_when: result is changed
+  - debug:
+       var: result.msg
+
+  - name: Wait for port 443 to become open on the host
+    wait_for:
+       host: "{{ inventory_hostname }}"
+       port: 443
+       delay: 30
+       connect_timeout: 5
+       timeout: 500
+    register: result
+#    failed_when: result.elapsed < 20
+  - debug:
+       var: result.state
+
+  - name: Get LC status.
+    idrac_lifecycle_controller_status_info:
+       idrac_ip:  "{{ inventory_hostname }}"
+       idrac_user: "{{ idrac_user }}"
+       idrac_password: "{{ idrac_password }}"
+       validate_certs: false
+    register: result
+    until:  result.lc_status_info.LCStatus == 'Ready' or result.lc_status_info.LCReady == True
+    retries: 30
+    delay: 10
+  - debug:
+          msg:
+            - " Valor de LCStatus: {{ result.lc_status_info.LCStatus }}"
+            - " Valor de  LCReady: {{ result.lc_status_info.LCReady }}"
