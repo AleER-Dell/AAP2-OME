@@ -1,0 +1,22 @@
+---
+- hosts: iDRACs
+  connection: local
+  name: iDRAC OS.iso Deployment
+  gather_facts: False
+
+  collections:
+  - dellemc.openmanage
+
+  tasks:
+  - name: Boot to Network ISO
+    idrac_os_deployment:
+        idrac_ip: "{{ inventory_hostname }}"
+        idrac_user:  "{{ idrac_user }}"
+        idrac_password: "{{ idrac_password }}"
+        validate_certs: false
+        share_name: "{{ NFS_Server }}:/NFS_Share"
+        iso_image: "{{ OS_Version }}"
+        expose_duration: 180
+    register: result_install_os
+  - debug:
+        var: result_install_os
